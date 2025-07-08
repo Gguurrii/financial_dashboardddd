@@ -18,6 +18,10 @@ const SettingsSection: React.FC = () => {
     security, 
     privacy, 
     integrations,
+    pendingChanges,
+    hasPendingChanges,
+    applyChanges,
+    discardChanges,
     updateProfile, 
     updateRegional, 
     updateNotifications,
@@ -79,6 +83,9 @@ const SettingsSection: React.FC = () => {
       // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1500));
       
+      // Apply all pending changes
+      applyChanges();
+      
       setSaveStatus('saved');
       
       // Reset status after 3 seconds
@@ -88,6 +95,11 @@ const SettingsSection: React.FC = () => {
       setSaveStatus('idle');
       alert('Error saving settings. Please try again.');
     }
+  };
+
+  const handleDiscardChanges = () => {
+    discardChanges();
+    setSaveStatus('idle');
   };
 
   const handlePhotoChange = () => {
@@ -120,7 +132,7 @@ const SettingsSection: React.FC = () => {
                   </label>
                   <Select
                     options={languageOptions}
-                    value={regional.language}
+                    value={pendingChanges.regional?.language ?? regional.language}
                     onChange={(value) => updateRegional({ language: value })}
                     placeholder="Select Language"
                   />
@@ -132,7 +144,7 @@ const SettingsSection: React.FC = () => {
                   </label>
                   <Select
                     options={currencyOptions}
-                    value={regional.currency}
+                    value={pendingChanges.regional?.currency ?? regional.currency}
                     onChange={(value) => updateRegional({ currency: value })}
                     placeholder="Select Currency"
                   />
@@ -144,7 +156,7 @@ const SettingsSection: React.FC = () => {
                   </label>
                   <Select
                     options={timezoneOptions}
-                    value={regional.timezone}
+                    value={pendingChanges.regional?.timezone ?? regional.timezone}
                     onChange={(value) => updateRegional({ timezone: value })}
                     placeholder="Select Time Zone"
                   />
@@ -209,7 +221,7 @@ const SettingsSection: React.FC = () => {
                         { value: 'medium', label: 'Medium', description: 'Default text size' },
                         { value: 'large', label: 'Large', description: 'Larger text for better readability' }
                       ]}
-                      value={appearance.fontSize}
+                      value={pendingChanges.appearance?.fontSize ?? appearance.fontSize}
                       onChange={(value) => updateAppearance({ fontSize: value as any })}
                       placeholder="Select Font Size"
                     />
@@ -226,7 +238,7 @@ const SettingsSection: React.FC = () => {
                         { value: 'purple', label: 'Purple', description: 'Creative purple theme' },
                         { value: 'orange', label: 'Orange', description: 'Energetic orange theme' }
                       ]}
-                      value={appearance.colorScheme}
+                      value={pendingChanges.appearance?.colorScheme ?? appearance.colorScheme}
                       onChange={(value) => updateAppearance({ colorScheme: value as any })}
                       placeholder="Select Color Scheme"
                     />
@@ -249,7 +261,7 @@ const SettingsSection: React.FC = () => {
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
                           type="checkbox"
-                          checked={appearance[item.key as keyof typeof appearance] as boolean}
+                          checked={pendingChanges.appearance?.[item.key as keyof typeof appearance] ?? appearance[item.key as keyof typeof appearance] as boolean}
                           onChange={(e) => updateAppearance({ [item.key]: e.target.checked })}
                           className="sr-only peer"
                         />
@@ -290,7 +302,7 @@ const SettingsSection: React.FC = () => {
                     </label>
                     <input 
                       type="text" 
-                      value={profile.firstName}
+                      value={pendingChanges.profile?.firstName ?? profile.firstName}
                       onChange={(e) => updateProfile({ firstName: e.target.value })}
                       className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 transition-all duration-300 ${
                         theme === 'light' 
@@ -305,7 +317,7 @@ const SettingsSection: React.FC = () => {
                     </label>
                     <input 
                       type="text" 
-                      value={profile.lastName}
+                      value={pendingChanges.profile?.lastName ?? profile.lastName}
                       onChange={(e) => updateProfile({ lastName: e.target.value })}
                       className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 transition-all duration-300 ${
                         theme === 'light' 
@@ -320,7 +332,7 @@ const SettingsSection: React.FC = () => {
                     </label>
                     <input 
                       type="email" 
-                      value={profile.email}
+                      value={pendingChanges.profile?.email ?? profile.email}
                       onChange={(e) => updateProfile({ email: e.target.value })}
                       className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 transition-all duration-300 ${
                         theme === 'light' 
@@ -335,7 +347,7 @@ const SettingsSection: React.FC = () => {
                     </label>
                     <input 
                       type="tel" 
-                      value={profile.phone}
+                      value={pendingChanges.profile?.phone ?? profile.phone}
                       onChange={(e) => updateProfile({ phone: e.target.value })}
                       className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 transition-all duration-300 ${
                         theme === 'light' 
@@ -350,7 +362,7 @@ const SettingsSection: React.FC = () => {
                     </label>
                     <input 
                       type="text" 
-                      value={profile.jobTitle}
+                      value={pendingChanges.profile?.jobTitle ?? profile.jobTitle}
                       onChange={(e) => updateProfile({ jobTitle: e.target.value })}
                       className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 transition-all duration-300 ${
                         theme === 'light' 
@@ -365,7 +377,7 @@ const SettingsSection: React.FC = () => {
                     </label>
                     <Select
                       options={departmentOptions}
-                      value={profile.department}
+                      value={pendingChanges.profile?.department ?? profile.department}
                       onChange={(value) => updateProfile({ department: value })}
                       placeholder="Select Department"
                     />
@@ -375,7 +387,7 @@ const SettingsSection: React.FC = () => {
                       Bio
                     </label>
                     <textarea 
-                      value={profile.bio}
+                      value={pendingChanges.profile?.bio ?? profile.bio}
                       onChange={(e) => updateProfile({ bio: e.target.value })}
                       rows={3}
                       className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 transition-all duration-300 resize-none ${
@@ -424,7 +436,7 @@ const SettingsSection: React.FC = () => {
                           <label className="relative inline-flex items-center cursor-pointer">
                             <input
                               type="checkbox"
-                              checked={notifications[item.key as keyof typeof notifications] as boolean}
+                              checked={pendingChanges.notifications?.[item.key as keyof typeof notifications] ?? notifications[item.key as keyof typeof notifications] as boolean}
                               onChange={(e) => updateNotifications({ [item.key]: e.target.checked })}
                               className="sr-only peer"
                             />
@@ -459,7 +471,7 @@ const SettingsSection: React.FC = () => {
                         <label className="relative inline-flex items-center cursor-pointer">
                           <input
                             type="checkbox"
-                            checked={notifications[item.key as keyof typeof notifications] as boolean}
+                            checked={pendingChanges.notifications?.[item.key as keyof typeof notifications] ?? notifications[item.key as keyof typeof notifications] as boolean}
                             onChange={(e) => updateNotifications({ [item.key]: e.target.checked })}
                             className="sr-only peer"
                           />
@@ -502,7 +514,7 @@ const SettingsSection: React.FC = () => {
                         <label className="relative inline-flex items-center cursor-pointer">
                           <input
                             type="checkbox"
-                            checked={security[item.key as keyof typeof security] as boolean}
+                            checked={pendingChanges.security?.[item.key as keyof typeof security] ?? security[item.key as keyof typeof security] as boolean}
                             onChange={(e) => updateSecurity({ [item.key]: e.target.checked })}
                             className="sr-only peer"
                           />
@@ -525,7 +537,7 @@ const SettingsSection: React.FC = () => {
                         { value: '60', label: '1 hour', description: 'Standard' },
                         { value: '120', label: '2 hours', description: 'Extended' }
                       ]}
-                      value={security.sessionTimeout.toString()}
+                      value={(pendingChanges.security?.sessionTimeout ?? security.sessionTimeout).toString()}
                       onChange={(value) => updateSecurity({ sessionTimeout: parseInt(value) })}
                       placeholder="Select Timeout"
                     />
@@ -542,7 +554,7 @@ const SettingsSection: React.FC = () => {
                         { value: '90', label: '90 days', description: 'Standard' },
                         { value: '180', label: '180 days', description: 'Extended' }
                       ]}
-                      value={security.passwordExpiry.toString()}
+                      value={(pendingChanges.security?.passwordExpiry ?? security.passwordExpiry).toString()}
                       onChange={(value) => updateSecurity({ passwordExpiry: parseInt(value) })}
                       placeholder="Select Expiry"
                     />
@@ -583,7 +595,7 @@ const SettingsSection: React.FC = () => {
                         <label className="relative inline-flex items-center cursor-pointer">
                           <input
                             type="checkbox"
-                            checked={privacy[item.key as keyof typeof privacy] as boolean}
+                            checked={pendingChanges.privacy?.[item.key as keyof typeof privacy] ?? privacy[item.key as keyof typeof privacy] as boolean}
                             onChange={(e) => updatePrivacy({ [item.key]: e.target.checked })}
                             className="sr-only peer"
                           />
@@ -604,7 +616,7 @@ const SettingsSection: React.FC = () => {
                       { value: 'team', label: 'Team Only', description: 'Visible to team members' },
                       { value: 'private', label: 'Private', description: 'Only visible to you' }
                     ]}
-                    value={privacy.profileVisibility}
+                    value={pendingChanges.privacy?.profileVisibility ?? privacy.profileVisibility}
                     onChange={(value) => updatePrivacy({ profileVisibility: value as any })}
                     placeholder="Select Visibility"
                   />
@@ -663,14 +675,14 @@ const SettingsSection: React.FC = () => {
                           <label className="relative inline-flex items-center cursor-pointer">
                             <input
                               type="checkbox"
-                              checked={integrations[item.key as keyof typeof integrations] as boolean}
+                              checked={pendingChanges.integrations?.[item.key as keyof typeof integrations] ?? integrations[item.key as keyof typeof integrations] as boolean}
                               onChange={(e) => updateIntegrations({ [item.key]: e.target.checked })}
                               className="sr-only peer"
                             />
                             <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                           </label>
                         </div>
-                        {integrations[item.key as keyof typeof integrations] && (
+                        {(pendingChanges.integrations?.[item.key as keyof typeof integrations] ?? integrations[item.key as keyof typeof integrations]) && (
                           <Button variant="ghost" size="sm" className="w-full">
                             Configure
                           </Button>
@@ -733,10 +745,21 @@ const SettingsSection: React.FC = () => {
           
           {/* Save Button */}
           <div className="mt-8 flex justify-end space-x-4">
+            {hasPendingChanges && (
+              <Button 
+                variant="secondary" 
+                onClick={handleDiscardChanges}
+                disabled={saveStatus === 'saving'}
+                className="transition-all duration-300 hover:scale-105"
+              >
+                <X className="w-4 h-4 mr-2" />
+                Discard Changes
+              </Button>
+            )}
             <Button 
               variant="primary" 
               onClick={handleSaveSettings}
-              disabled={saveStatus === 'saving'}
+              disabled={saveStatus === 'saving' || !hasPendingChanges}
               className="transition-all duration-300 hover:scale-105"
             >
               {saveStatus === 'saving' ? (
@@ -756,6 +779,14 @@ const SettingsSection: React.FC = () => {
                 </>
               )}
             </Button>
+            
+            {hasPendingChanges && saveStatus === 'idle' && (
+              <div className="mt-2 text-center">
+                <p className={`text-sm ${theme === 'light' ? 'text-orange-600' : 'text-orange-400'}`}>
+                  You have unsaved changes
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>
