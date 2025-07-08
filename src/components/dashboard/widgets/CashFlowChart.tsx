@@ -3,12 +3,15 @@ import { CashFlowData } from '../../../types/financial';
 import AreaChart from '../../charts/AreaChart';
 import Card from '../../ui/Card';
 import { TrendingUp, TrendingDown, DollarSign, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { useSettings } from '../../../contexts/SettingsContext';
 
 interface CashFlowChartProps {
   data: CashFlowData[];
 }
 
 const CashFlowChart: React.FC<CashFlowChartProps> = ({ data }) => {
+  const { formatCurrency } = useSettings();
+
   const chartData = data.map(item => ({
     name: item.month,
     value: item.netFlow,
@@ -43,7 +46,7 @@ const CashFlowChart: React.FC<CashFlowChartProps> = ({ data }) => {
             </div>
             <p className="text-white/70 text-xs uppercase tracking-wide mb-1">Net Flow</p>
             <p className="text-white text-xl font-bold">
-              ${(netFlow / 1000000).toFixed(1)}M
+              {formatCurrency(netFlow)}
             </p>
             <div className="flex items-center justify-center mt-1">
               <ArrowUpRight className="w-3 h-3 text-emerald-300 mr-1" />
@@ -61,7 +64,7 @@ const CashFlowChart: React.FC<CashFlowChartProps> = ({ data }) => {
             </div>
             <p className="text-white/70 text-xs uppercase tracking-wide mb-1">Monthly Avg</p>
             <p className="text-white text-xl font-bold">
-              ${(avgMonthlyFlow / 1000000).toFixed(1)}M
+              {formatCurrency(avgMonthlyFlow)}
             </p>
             <span className="text-blue-300 text-xs">Consistent Growth</span>
           </div>
@@ -74,7 +77,7 @@ const CashFlowChart: React.FC<CashFlowChartProps> = ({ data }) => {
             </div>
             <p className="text-white/70 text-xs uppercase tracking-wide mb-1">Best Month</p>
             <p className="text-white text-xl font-bold">
-              ${(bestMonth / 1000000).toFixed(1)}M
+              {formatCurrency(bestMonth)}
             </p>
             <span className="text-purple-300 text-xs">Peak Performance</span>
           </div>
@@ -99,7 +102,7 @@ const CashFlowChart: React.FC<CashFlowChartProps> = ({ data }) => {
               <ArrowUpRight className="w-4 h-4 text-emerald-300" />
             </div>
             <p className="text-white text-2xl font-bold mb-1">
-              ${(totalIncome / 1000000).toFixed(1)}M
+              {formatCurrency(totalIncome)}
             </p>
             <p className="text-emerald-300 text-sm">+18.3% vs last period</p>
           </div>
@@ -110,7 +113,7 @@ const CashFlowChart: React.FC<CashFlowChartProps> = ({ data }) => {
               <ArrowDownRight className="w-4 h-4 text-red-300" />
             </div>
             <p className="text-white text-2xl font-bold mb-1">
-              ${(totalExpenses / 1000000).toFixed(1)}M
+              {formatCurrency(totalExpenses)}
             </p>
             <p className="text-red-300 text-sm">+5.2% vs last period</p>
           </div>

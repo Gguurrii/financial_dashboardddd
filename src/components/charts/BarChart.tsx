@@ -1,5 +1,6 @@
 import React from 'react';
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { useSettings } from '../../contexts/SettingsContext';
 
 interface BarChartData {
   name: string;
@@ -20,13 +21,15 @@ const BarChart: React.FC<BarChartProps> = ({
   color = '#3B82F6',
   showGrid = true 
 }) => {
+  const { formatCurrency } = useSettings();
+
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-white/95 backdrop-blur-md border border-gray-200 rounded-xl p-3 shadow-xl">
           <p className="text-gray-800 font-medium">{label}</p>
           <p className="text-blue-600">
-            ${(payload[0].value / 1000000).toFixed(1)}M
+            {formatCurrency(payload[0].value)}
           </p>
         </div>
       );
@@ -51,7 +54,7 @@ const BarChart: React.FC<BarChartProps> = ({
             axisLine={false}
             tickLine={false}
             tick={{ fill: 'rgba(75,85,99,0.8)', fontSize: 12 }}
-            tickFormatter={(value) => `$${(value / 1000000).toFixed(0)}M`}
+            tickFormatter={(value) => formatCurrency(value)}
           />
           <Tooltip content={<CustomTooltip />} />
           <Bar 

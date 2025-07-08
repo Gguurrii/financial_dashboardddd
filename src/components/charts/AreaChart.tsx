@@ -1,5 +1,6 @@
 import React from 'react';
 import { AreaChart as RechartsAreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { useSettings } from '../../contexts/SettingsContext';
 
 interface AreaChartData {
   name: string;
@@ -24,6 +25,8 @@ const AreaChart: React.FC<AreaChartProps> = ({
   showGrid = true,
   dual = false
 }) => {
+  const { formatCurrency } = useSettings();
+
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
@@ -31,7 +34,7 @@ const AreaChart: React.FC<AreaChartProps> = ({
           <p className="text-gray-800 font-medium">{label}</p>
           {payload.map((entry: any, index: number) => (
             <p key={index} className="text-blue-600">
-              {entry.dataKey}: ${(entry.value / 1000000).toFixed(1)}M
+              {entry.dataKey}: {formatCurrency(entry.value)}
             </p>
           ))}
         </div>
@@ -69,7 +72,7 @@ const AreaChart: React.FC<AreaChartProps> = ({
             axisLine={false}
             tickLine={false}
             tick={{ fill: 'rgba(75,85,99,0.8)', fontSize: 12 }}
-            tickFormatter={(value) => `$${(value / 1000000).toFixed(0)}M`}
+            tickFormatter={(value) => formatCurrency(value)}
           />
           <Tooltip content={<CustomTooltip />} />
           <Area

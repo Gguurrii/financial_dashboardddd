@@ -114,7 +114,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const saved = localStorage.getItem('regionalSettings');
     return saved ? JSON.parse(saved) : {
       language: 'en',
-      currency: 'usd',
+      currency: 'inr',
       timezone: 'est',
       dateFormat: 'mm/dd/yyyy',
       numberFormat: 'us'
@@ -243,23 +243,23 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const formatCurrency = (amount: number): string => {
     const currencyMap = {
+      inr: { code: 'INR', symbol: '₹', locale: 'en-IN' },
       usd: { code: 'USD', symbol: '$', locale: 'en-US' },
       eur: { code: 'EUR', symbol: '€', locale: 'de-DE' },
       gbp: { code: 'GBP', symbol: '£', locale: 'en-GB' },
       cad: { code: 'CAD', symbol: 'C$', locale: 'en-CA' },
-      inr: { code: 'INR', symbol: '₹', locale: 'en-IN' }
     };
 
-    const currency = currencyMap[regional.currency as keyof typeof currencyMap] || currencyMap.usd;
+    const currency = currencyMap[regional.currency as keyof typeof currencyMap] || currencyMap.inr;
     
     try {
       // For compact display (millions/thousands)
       if (amount >= 1000000) {
         const value = amount / 1000000;
-        return `${currency.symbol}${value.toFixed(1)}M`;
+        return `${currency.symbol}${value.toFixed(1)}Cr`;
       } else if (amount >= 1000) {
         const value = amount / 1000;
-        return `${currency.symbol}${value.toFixed(1)}K`;
+        return `${currency.symbol}${value.toFixed(1)}L`;
       }
       
       // For regular amounts
@@ -272,9 +272,9 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     } catch (error) {
       // Fallback for unsupported currencies
       if (amount >= 1000000) {
-        return `${currency.symbol}${(amount / 1000000).toFixed(1)}M`;
+        return `${currency.symbol}${(amount / 1000000).toFixed(1)}Cr`;
       } else if (amount >= 1000) {
-        return `${currency.symbol}${(amount / 1000).toFixed(1)}K`;
+        return `${currency.symbol}${(amount / 1000).toFixed(1)}L`;
       }
       return `${currency.symbol}${amount.toLocaleString()}`;
     }

@@ -48,11 +48,11 @@ const SettingsSection: React.FC = () => {
   ];
 
   const currencyOptions = [
+    { value: 'inr', label: 'INR (₹)', description: 'Indian Rupee' },
     { value: 'usd', label: 'USD ($)', description: 'US Dollar' },
     { value: 'eur', label: 'EUR (€)', description: 'Euro' },
     { value: 'gbp', label: 'GBP (£)', description: 'British Pound' },
     { value: 'cad', label: 'CAD ($)', description: 'Canadian Dollar' },
-    { value: 'inr', label: 'INR (₹)', description: 'Indian Rupee' }
   ];
 
   const timezoneOptions = [

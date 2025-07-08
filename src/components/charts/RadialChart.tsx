@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSettings } from '../../contexts/SettingsContext';
 
 interface RadialChartProps {
   value: number;
@@ -21,6 +22,7 @@ const RadialChart: React.FC<RadialChartProps> = ({
   label,
   animate = true
 }) => {
+  const { formatCurrency } = useSettings();
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const percentage = (value / maxValue) * 100;
@@ -68,7 +70,7 @@ const RadialChart: React.FC<RadialChartProps> = ({
             {percentage.toFixed(0)}%
           </span>
           <span className="text-gray-500 text-xs">
-            ${(value / 1000000).toFixed(1)}M
+            {formatCurrency(value)}
           </span>
         </div>
       </div>

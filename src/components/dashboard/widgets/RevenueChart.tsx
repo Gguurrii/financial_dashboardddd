@@ -3,12 +3,15 @@ import { RevenueData } from '../../../types/financial';
 import AreaChart from '../../charts/AreaChart';
 import Card from '../../ui/Card';
 import { TrendingUp, DollarSign, Users, Award } from 'lucide-react';
+import { useSettings } from '../../../contexts/SettingsContext';
 
 interface RevenueChartProps {
   data: RevenueData[];
 }
 
 const RevenueChart: React.FC<RevenueChartProps> = ({ data }) => {
+  const { formatCurrency } = useSettings();
+
   const chartData = data.map(item => ({
     name: item.month,
     'Student Fees': item.studentFees,
@@ -72,7 +75,7 @@ const RevenueChart: React.FC<RevenueChartProps> = ({ data }) => {
             <div>
               <h3 className="text-white font-semibold text-lg mb-1">Total Annual Revenue</h3>
               <p className="text-white text-3xl font-bold">
-                ${(totalRevenue / 1000000).toFixed(1)}M
+                {formatCurrency(totalRevenue)}
               </p>
             </div>
             <div className="text-right">
@@ -121,7 +124,7 @@ const RevenueChart: React.FC<RevenueChartProps> = ({ data }) => {
                 
                 <h4 className="text-white font-medium text-sm mb-1">{stream.name}</h4>
                 <p className="text-white text-lg font-bold mb-1">
-                  ${(stream.value / 1000000).toFixed(1)}M
+                  {formatCurrency(stream.value)}
                 </p>
                 
                 {/* Progress Bar */}

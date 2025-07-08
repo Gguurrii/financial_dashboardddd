@@ -1,5 +1,6 @@
 import React from 'react';
 import { PieChart as RechartsPieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { useSettings } from '../../contexts/SettingsContext';
 
 interface PieChartData {
   name: string;
@@ -22,6 +23,8 @@ const PieChart: React.FC<PieChartProps> = ({
   innerRadius = 60,
   outerRadius = 120
 }) => {
+  const { formatCurrency } = useSettings();
+
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       const data = payload[0];
@@ -29,7 +32,7 @@ const PieChart: React.FC<PieChartProps> = ({
         <div className="bg-white/95 backdrop-blur-md border border-gray-200 rounded-xl p-3 shadow-xl">
           <p className="text-gray-800 font-medium">{data.name}</p>
           <p className="text-blue-600">
-            ${(data.value / 1000000).toFixed(1)}M ({((data.value / data.payload.total) * 100).toFixed(1)}%)
+            {formatCurrency(data.value)} ({((data.value / data.payload.total) * 100).toFixed(1)}%)
           </p>
         </div>
       );
