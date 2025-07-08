@@ -1,56 +1,59 @@
-import React from 'react';
-import { DivideIcon as LucideIcon } from 'lucide-react';
+import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
+import { cva, type VariantProps } from "class-variance-authority"
+import { cn } from "@/lib/utils"
 
-interface ButtonProps {
-  children: React.ReactNode;
-  onClick?: () => void;
-  variant?: 'primary' | 'secondary' | 'ghost' | 'glass';
-  size?: 'sm' | 'md' | 'lg';
-  icon?: LucideIcon;
-  disabled?: boolean;
-  className?: string;
+/**
+ * Professional button variants for financial dashboard
+ * Provides consistent styling across all interactive elements
+ */
+const buttonVariants = cva(
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        destructive:
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        outline:
+          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
+      },
+      size: {
+        default: "h-10 px-4 py-2",
+        sm: "h-9 rounded-md px-3",
+        lg: "h-11 rounded-md px-8",
+        icon: "h-10 w-10",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+)
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean
 }
 
-const Button: React.FC<ButtonProps> = ({
-  children,
-  onClick,
-  variant = 'primary',
-  size = 'md',
-  icon: Icon,
-  disabled = false,
-  className = ''
-}) => {
-  const baseClass = 'inline-flex items-center justify-center font-medium rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2';
-  
-  const variants = {
-    primary: 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl focus:ring-blue-500',
-    secondary: 'theme-bg-secondary theme-text-primary theme-border border hover:opacity-80 shadow-lg hover:shadow-xl focus:ring-gray-500',
-    ghost: 'theme-text-primary hover:theme-bg-tertiary theme-border border focus:ring-gray-500',
-    glass: 'theme-glass theme-text-primary shadow-lg focus:ring-gray-500'
-  };
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button"
+    return (
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+      />
+    )
+  }
+)
+Button.displayName = "Button"
 
-  const sizes = {
-    sm: 'px-3 py-2 text-sm',
-    md: 'px-4 py-2.5 text-sm',
-    lg: 'px-6 py-3 text-base'
-  };
-
-  return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      className={`
-        ${baseClass}
-        ${variants[variant]}
-        ${sizes[size]}
-        ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'}
-        ${className}
-      `}
-    >
-      {Icon && <Icon className="w-4 h-4 mr-2" />}
-      {children}
-    </button>
-  );
-};
-
-export default Button;
+export { Button, buttonVariants }
