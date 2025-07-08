@@ -315,23 +315,71 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const formatCurrency = (amount: number): string => {
     const currencyMap = {
-      inr: { code: 'INR', symbol: '₹', locale: 'en-IN' },
-      usd: { code: 'USD', symbol: '$', locale: 'en-US' },
-      eur: { code: 'EUR', symbol: '€', locale: 'de-DE' },
-      gbp: { code: 'GBP', symbol: '£', locale: 'en-GB' },
-      cad: { code: 'CAD', symbol: 'C$', locale: 'en-CA' },
+      inr: { 
+        code: 'INR', 
+        symbol: '₹', 
+        locale: 'en-IN',
+        exchangeRate: 83.12, // 1 USD = 83.12 INR (example rate)
+        largeUnit: 'Cr', // Crore
+        mediumUnit: 'L', // Lakh
+        largeThreshold: 10000000, // 1 Crore = 10 Million
+        mediumThreshold: 100000 // 1 Lakh = 100 Thousand
+      },
+      usd: { 
+        code: 'USD', 
+        symbol: '$', 
+        locale: 'en-US',
+        exchangeRate: 1, // Base currency
+        largeUnit: 'M', // Million
+        mediumUnit: 'K', // Thousand
+        largeThreshold: 1000000, // 1 Million
+        mediumThreshold: 1000 // 1 Thousand
+      },
+      eur: { 
+        code: 'EUR', 
+        symbol: '€', 
+        locale: 'de-DE',
+        exchangeRate: 0.92, // 1 USD = 0.92 EUR (example rate)
+        largeUnit: 'M', // Million
+        mediumUnit: 'K', // Thousand
+        largeThreshold: 1000000,
+        mediumThreshold: 1000
+      },
+      gbp: { 
+        code: 'GBP', 
+        symbol: '£', 
+        locale: 'en-GB',
+        exchangeRate: 0.79, // 1 USD = 0.79 GBP (example rate)
+        largeUnit: 'M', // Million
+        mediumUnit: 'K', // Thousand
+        largeThreshold: 1000000,
+        mediumThreshold: 1000
+      },
+      cad: { 
+        code: 'CAD', 
+        symbol: 'C$', 
+        locale: 'en-CA',
+        exchangeRate: 1.36, // 1 USD = 1.36 CAD (example rate)
+        largeUnit: 'M', // Million
+        mediumUnit: 'K', // Thousand
+        largeThreshold: 1000000,
+        mediumThreshold: 1000
+      },
     };
 
     const currency = currencyMap[regional.currency as keyof typeof currencyMap] || currencyMap.inr;
     
+    // Convert amount from base currency (USD) to selected currency
+    const convertedAmount = amount * currency.exchangeRate;
+    
     try {
-      // For compact display (millions/thousands)
-      if (amount >= 1000000) {
-        const value = amount / 1000000;
-        return `${currency.symbol}${value.toFixed(1)}Cr`;
-      } else if (amount >= 1000) {
-        const value = amount / 1000;
-        return `${currency.symbol}${value.toFixed(1)}L`;
+      // For compact display based on currency-specific thresholds
+      if (convertedAmount >= currency.largeThreshold) {
+        const value = convertedAmount / currency.largeThreshold;
+        return `${currency.symbol}${value.toFixed(1)}${currency.largeUnit}`;
+      } else if (convertedAmount >= currency.mediumThreshold) {
+        const value = convertedAmount / currency.mediumThreshold;
+        return `${currency.symbol}${value.toFixed(1)}${currency.mediumUnit}`;
       }
       
       // For regular amounts
@@ -340,15 +388,15 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         currency: currency.code,
         minimumFractionDigits: 0,
         maximumFractionDigits: 0,
-      }).format(amount);
+      }).format(convertedAmount);
     } catch (error) {
       // Fallback for unsupported currencies
-      if (amount >= 1000000) {
-        return `${currency.symbol}${(amount / 1000000).toFixed(1)}Cr`;
-      } else if (amount >= 1000) {
-        return `${currency.symbol}${(amount / 1000).toFixed(1)}L`;
+      if (convertedAmount >= currency.largeThreshold) {
+        return `${currency.symbol}${(convertedAmount / currency.largeThreshold).toFixed(1)}${currency.largeUnit}`;
+      } else if (convertedAmount >= currency.mediumThreshold) {
+        return `${currency.symbol}${(convertedAmount / currency.mediumThreshold).toFixed(1)}${currency.mediumUnit}`;
       }
-      return `${currency.symbol}${amount.toLocaleString()}`;
+      return `${currency.symbol}${convertedAmount.toLocaleString()}`;
     }
   };
 

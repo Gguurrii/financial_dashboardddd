@@ -2,12 +2,15 @@ import React from 'react';
 import { ExpenseData } from '../../../types/financial';
 import PieChart from '../../charts/PieChart';
 import Card from '../../ui/Card';
+import { useSettings } from '../../../contexts/SettingsContext';
 
 interface ExpenseBreakdownProps {
   data: ExpenseData[];
 }
 
 const ExpenseBreakdown: React.FC<ExpenseBreakdownProps> = ({ data }) => {
+  const { formatCurrency } = useSettings();
+  
   const chartData = data.map(item => ({
     name: item.category,
     value: item.amount,
@@ -42,7 +45,7 @@ const ExpenseBreakdown: React.FC<ExpenseBreakdownProps> = ({ data }) => {
               </div>
               <div className="text-right">
                 <p className="text-white font-semibold">
-                  ${(item.amount / 1000000).toFixed(1)}M
+                  {formatCurrency(item.amount)}
                 </p>
                 <p className="text-white/70 text-xs">
                   {item.percentage}%
