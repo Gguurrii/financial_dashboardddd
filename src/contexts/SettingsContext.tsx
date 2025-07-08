@@ -1,5 +1,15 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
+interface PendingChanges {
+  profile?: Partial<UserProfile>;
+  regional?: Partial<RegionalSettings>;
+  notifications?: Partial<NotificationSettings>;
+  appearance?: Partial<AppearanceSettings>;
+  security?: Partial<SecuritySettings>;
+  privacy?: Partial<PrivacySettings>;
+  integrations?: Partial<IntegrationSettings>;
+}
+
 interface UserProfile {
   firstName: string;
   lastName: string;
@@ -82,6 +92,10 @@ interface SettingsContextType {
   updateSecurity: (updates: Partial<SecuritySettings>) => void;
   updatePrivacy: (updates: Partial<PrivacySettings>) => void;
   updateIntegrations: (updates: Partial<IntegrationSettings>) => void;
+  pendingChanges: PendingChanges;
+  hasPendingChanges: boolean;
+  applyChanges: () => void;
+  discardChanges: () => void;
   formatCurrency: (amount: number) => string;
   formatDateTime: (date: Date) => string;
 }
@@ -184,6 +198,9 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     };
   });
 
+  // Track pending changes
+  const [pendingChanges, setPendingChanges] = useState<PendingChanges>({});
+
   // Save to localStorage whenever settings change
   useEffect(() => {
     localStorage.setItem('userProfile', JSON.stringify(profile));
@@ -213,32 +230,87 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     localStorage.setItem('integrationSettings', JSON.stringify(integrations));
   }, [integrations]);
 
+  // Check if there are pending changes
+  const hasPendingChanges = Object.keys(pendingChanges).length > 0;
+
   const updateProfile = (updates: Partial<UserProfile>) => {
-    setProfile(prev => ({ ...prev, ...updates }));
+    setPendingChanges(prev => ({
+      ...prev,
+      profile: { ...prev.profile, ...updates }
+    }));
   };
 
   const updateRegional = (updates: Partial<RegionalSettings>) => {
-    setRegional(prev => ({ ...prev, ...updates }));
+    setPendingChanges(prev => ({
+      ...prev,
+      regional: { ...prev.regional, ...updates }
+    }));
   };
 
   const updateNotifications = (updates: Partial<NotificationSettings>) => {
-    setNotifications(prev => ({ ...prev, ...updates }));
+    setPendingChanges(prev => ({
+      ...prev,
+      notifications: { ...prev.notifications, ...updates }
+    }));
   };
 
   const updateAppearance = (updates: Partial<AppearanceSettings>) => {
-    setAppearance(prev => ({ ...prev, ...updates }));
+    setPendingChanges(prev => ({
+      ...prev,
+      appearance: { ...prev.appearance, ...updates }
+    }));
   };
 
   const updateSecurity = (updates: Partial<SecuritySettings>) => {
-    setSecurity(prev => ({ ...prev, ...updates }));
+    setPendingChanges(prev => ({
+      ...prev,
+      security: { ...prev.security, ...updates }
+    }));
   };
 
   const updatePrivacy = (updates: Partial<PrivacySettings>) => {
-    setPrivacy(prev => ({ ...prev, ...updates }));
+    setPendingChanges(prev => ({
+      ...prev,
+      privacy: { ...prev.privacy, ...updates }
+    }));
   };
 
   const updateIntegrations = (updates: Partial<IntegrationSettings>) => {
-    setIntegrations(prev => ({ ...prev, ...updates }));
+    setPendingChanges(prev => ({
+      ...prev,
+      integrations: { ...prev.integrations, ...updates }
+    }));
+  };
+
+  const applyChanges = () => {
+    if (pendingChanges.profile) {
+      setProfile(prev => ({ ...prev, ...pendingChanges.profile }));
+    }
+    if (pendingChanges.regional) {
+      setRegional(prev => ({ ...prev, ...pendingChanges.regional }));
+    }
+    if (pendingChanges.notifications) {
+      setNotifications(prev => ({ ...prev, ...pendingChanges.notifications }));
+    }
+    if (pendingChanges.appearance) {
+      setAppearance(prev => ({ ...prev, ...pendingChanges.appearance }));
+    }
+    if (pendingChanges.security) {
+      setSecurity(prev => ({ ...prev, ...pendingChanges.security }));
+    }
+    if (pendingChanges.privacy) {
+      setPrivacy(prev => ({ ...prev, ...pendingChanges.privacy }));
+    }
+    if (pendingChanges.integrations) {
+      setIntegrations(prev => ({ ...prev, ...pendingChanges.integrations }));
+    }
+    
+    // Clear pending changes
+    setPendingChanges({});
+  };
+
+  const discardChanges = () => {
+    setPendingChanges({});
   };
 
   const formatCurrency = (amount: number): string => {
@@ -320,6 +392,10 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       updateSecurity,
       updatePrivacy,
       updateIntegrations,
+      pendingChanges,
+      hasPendingChanges,
+      applyChanges,
+      discardChanges,
       formatCurrency,
       formatDateTime
     }}>
