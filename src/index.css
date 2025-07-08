@@ -2,113 +2,180 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222.2 84% 4.9%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 222.2 84% 4.9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
-    --radius: 0.5rem;
-  }
+/* Base theme variables */
+:root {
+  --transition-duration: 300ms;
+  --font-size-multiplier: 0.9;
 }
 
-@layer base {
-  * {
-    border-color: hsl(var(--border));
-  }
-  body {
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
-    font-feature-settings: "rlig" 1, "calt" 1;
-  }
+/* Light theme (default) */
+[data-theme="light"],
+.light-theme {
+  --bg-primary: #f9fafb;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f3f4f6;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
+  --border-color: #e5e7eb;
+  --border-hover: #d1d5db;
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(229, 231, 235, 0.5);
+  --card-bg: rgba(255, 255, 255, 0.8);
+  --card-hover: rgba(255, 255, 255, 0.9);
+  --sidebar-bg: rgba(255, 255, 255, 0.8);
+  --header-bg: rgba(255, 255, 255, 0.8);
+  --input-bg: rgba(243, 244, 246, 0.7);
+  --shadow-color: rgba(0, 0, 0, 0.1);
 }
 
-/* Professional financial dashboard styling */
-@layer components {
-  .financial-gradient {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  }
-  
-  .chart-container {
-    @apply rounded-lg border bg-card p-4;
-  }
-  
-  .kpi-card {
-    @apply rounded-lg border bg-card p-6 shadow-sm transition-all hover:shadow-md;
-  }
-  
-  .data-table {
-    @apply w-full border-collapse border-spacing-0;
-  }
-  
-  .data-table th {
-    @apply border-b bg-muted/50 px-4 py-3 text-left text-sm font-medium text-muted-foreground;
-  }
-  
-  .data-table td {
-    @apply border-b px-4 py-3 text-sm;
-  }
-  
-  .sidebar-nav {
-    @apply space-y-1;
-  }
-  
-  .sidebar-nav-item {
-    @apply flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors;
-  }
-  
-  .sidebar-nav-item:hover {
-    @apply bg-accent text-accent-foreground;
-  }
-  
-  .sidebar-nav-item[data-active="true"] {
-    @apply bg-accent text-accent-foreground;
-  }
+/* Dark theme */
+[data-theme="dark"],
+.dark-theme {
+  --bg-primary: #111827;
+  --bg-secondary: #1f2937;
+  --bg-tertiary: #374151;
+  --text-primary: #ffffff;
+  --text-secondary: #d1d5db;
+  --text-tertiary: #9ca3af;
+  --border-color: #374151;
+  --border-hover: #4b5563;
+  --glass-bg: rgba(31, 41, 55, 0.8);
+  --glass-border: rgba(55, 65, 81, 0.5);
+  --card-bg: rgba(31, 41, 55, 0.8);
+  --card-hover: rgba(31, 41, 55, 0.9);
+  --sidebar-bg: rgba(17, 24, 39, 0.95);
+  --header-bg: rgba(17, 24, 39, 0.8);
+  --input-bg: rgba(55, 65, 81, 0.7);
+  --shadow-color: rgba(0, 0, 0, 0.3);
 }
 
-/* Smooth animations for financial data */
-@layer utilities {
-  .animate-fade-in {
-    animation: fadeIn 0.5s ease-in-out;
-  }
-  
-  .animate-slide-up {
-    animation: slideUp 0.5s ease-out;
-  }
-  
-  .animate-scale-in {
-    animation: scaleIn 0.3s ease-out;
-  }
+/* Apply theme to body */
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color var(--transition-duration), color var(--transition-duration);
+  font-size: calc(0.875rem * var(--font-size-multiplier));
 }
 
-@keyframes fadeIn {
+/* Light theme background */
+.light-theme {
+  background: linear-gradient(135deg, #f9fafb, #ffffff, #dbeafe);
+}
+
+/* Dark theme background */
+.dark-theme {
+  background: linear-gradient(135deg, #111827, #1f2937, #000000);
+}
+
+/* Accessibility Features */
+.reduce-motion * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+.high-contrast {
+  --text-primary: #000000;
+  --text-secondary: #333333;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --border-color: #000000;
+}
+
+.dark-theme.high-contrast {
+  --text-primary: #ffffff;
+  --text-secondary: #cccccc;
+  --bg-primary: #000000;
+  --bg-secondary: #1a1a1a;
+  --border-color: #ffffff;
+}
+
+.compact-view {
+  --spacing-multiplier: 0.75;
+}
+
+.compact-view .theme-card {
+  padding: calc(1rem * var(--spacing-multiplier, 1));
+}
+
+.compact-view h1 {
+  font-size: calc(2rem * var(--spacing-multiplier, 1));
+}
+
+.compact-view h2 {
+  font-size: calc(1.5rem * var(--spacing-multiplier, 1));
+}
+
+.compact-view h3 {
+  font-size: calc(1.25rem * var(--spacing-multiplier, 1));
+}
+
+/* Theme-aware utility classes */
+.theme-bg-primary {
+  background-color: var(--bg-primary);
+}
+
+.theme-bg-secondary {
+  background-color: var(--bg-secondary);
+}
+
+.theme-bg-tertiary {
+  background-color: var(--bg-tertiary);
+}
+
+.theme-text-primary {
+  color: var(--text-primary);
+}
+
+.theme-text-secondary {
+  color: var(--text-secondary);
+}
+
+.theme-text-tertiary {
+  color: var(--text-tertiary);
+}
+
+.theme-border {
+  border-color: var(--border-color);
+}
+
+.theme-glass {
+  background: var(--glass-bg);
+  border-color: var(--glass-border);
+  backdrop-filter: blur(12px);
+}
+
+.theme-card {
+  background: var(--card-bg);
+  border-color: var(--border-color);
+  box-shadow: 0 10px 25px var(--shadow-color);
+}
+
+.theme-card:hover {
+  background: var(--card-hover);
+  border-color: var(--border-hover);
+}
+
+.theme-input {
+  background: var(--input-bg);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.theme-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.theme-input:focus {
+  border-color: #3b82f6;
+}
+
+/* Enhanced animations with state-of-the-art techniques */
+@keyframes fadeInUp {
   from {
     opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
@@ -116,10 +183,32 @@
   }
 }
 
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 @keyframes scaleIn {
   from {
     opacity: 0;
-    transform: scale(0.95);
+    transform: scale(0.9);
   }
   to {
     opacity: 1;
@@ -127,59 +216,521 @@
   }
 }
 
-/* Professional scrollbar styling */
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Enhanced Genie Effect Animation - Top to Bottom */
+@keyframes genieIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.1) translateY(-100%) rotateX(-90deg);
+    transform-origin: top center;
+  }
+  20% {
+    opacity: 0.3;
+    transform: scale(0.3) translateY(-50%) rotateX(-45deg);
+  }
+  40% {
+    opacity: 0.6;
+    transform: scale(0.6) translateY(-20%) rotateX(-20deg);
+  }
+  60% {
+    opacity: 0.8;
+    transform: scale(0.8) translateY(-5%) rotateX(-5deg);
+  }
+  80% {
+    opacity: 0.9;
+    transform: scale(1.05) translateY(2%) rotateX(2deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0%) rotateX(0deg);
+  }
+}
+
+@keyframes genieOut {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0%) rotateX(0deg);
+    transform-origin: top center;
+  }
+  20% {
+    opacity: 0.9;
+    transform: scale(1.05) translateY(2%) rotateX(2deg);
+  }
+  40% {
+    opacity: 0.8;
+    transform: scale(0.8) translateY(-5%) rotateX(-5deg);
+  }
+  60% {
+    opacity: 0.6;
+    transform: scale(0.6) translateY(-20%) rotateX(-20deg);
+  }
+  80% {
+    opacity: 0.3;
+    transform: scale(0.3) translateY(-50%) rotateX(-45deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.1) translateY(-100%) rotateX(-90deg);
+  }
+}
+
+/* Smooth morphing animations */
+@keyframes morphIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) rotate(-5deg);
+    filter: blur(10px);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05) rotate(2deg);
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+    filter: blur(0px);
+  }
+}
+
+@keyframes liquidFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+  66% {
+    transform: translateY(5px) rotate(-1deg);
+  }
+}
+
+@keyframes elasticScale {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Particle effects */
+@keyframes particleFloat {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px) rotate(0deg);
+    opacity: 0.3;
+  }
+  25% {
+    transform: translateY(-20px) translateX(10px) rotate(90deg);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(-10px) translateX(-5px) rotate(180deg);
+    opacity: 1;
+  }
+  75% {
+    transform: translateY(-30px) translateX(15px) rotate(270deg);
+    opacity: 0.5;
+  }
+}
+
+/* Glass morphism effects */
+@keyframes glassShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  opacity: 0;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  opacity: 0;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  opacity: 0;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  opacity: 0;
+}
+
+.animate-bounce-in {
+  animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+  opacity: 0;
+}
+
+.animate-genie-in {
+  animation: genieIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.animate-genie-out {
+  animation: genieOut 0.4s cubic-bezier(0.55, 0.055, 0.675, 0.19) forwards;
+}
+
+.animate-morph-in {
+  animation: morphIn 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  opacity: 0;
+}
+
+.animate-liquid-float {
+  animation: liquidFloat 3s ease-in-out infinite;
+}
+
+.animate-elastic-scale {
+  animation: elasticScale 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.animate-particle-float {
+  animation: particleFloat 4s ease-in-out infinite;
+}
+
+.animate-glass-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  background-size: 200% 100%;
+  animation: glassShimmer 2s infinite;
+}
+
+/* Smooth transitions for theme changes */
+* {
+  transition: background-color var(--transition-duration), 
+              border-color var(--transition-duration), 
+              color var(--transition-duration),
+              transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              box-shadow 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Remove focus outlines that cause white borders */
+*:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+*:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Remove default button focus styles */
+button:focus,
+button:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Remove focus rings from interactive elements */
+div:focus,
+div:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: inherit !important;
+}
+
+/* Enhanced hover effects with physics-based animations */
+.hover-lift:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+  transition: box-shadow 0.4s ease-out;
+}
+
+/* Glassmorphism effects with enhanced blur */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.dark-glass-effect {
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Enhanced visibility for all themes */
+.theme-card,
+.theme-glass {
+  color: var(--text-primary) !important;
+}
+
+.theme-card h1,
+.theme-card h2,
+.theme-card h3,
+.theme-card h4,
+.theme-card h5,
+.theme-card h6,
+.theme-glass h1,
+.theme-glass h2,
+.theme-glass h3,
+.theme-glass h4,
+.theme-glass h5,
+.theme-glass h6 {
+  color: var(--text-primary) !important;
+}
+
+.theme-card p,
+.theme-card span,
+.theme-card div,
+.theme-glass p,
+.theme-glass span,
+.theme-glass div {
+  color: inherit !important;
+}
+
+/* Ensure chart text visibility */
+.recharts-text {
+  fill: var(--text-primary) !important;
+}
+
+.recharts-cartesian-axis-tick-value {
+  fill: var(--text-secondary) !important;
+}
+
+.recharts-legend-item-text {
+  color: var(--text-primary) !important;
+}
+
+/* Enhanced glass effects for light theme */
+.light-theme .theme-glass {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+}
+
+.dark-theme .theme-glass {
+  background: rgba(31, 41, 55, 0.85) !important;
+  border: 1px solid rgba(55, 65, 81, 0.6) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+}
+
+/* Ensure proper contrast for glass elements */
+.light-theme .theme-glass * {
+  color: #1f2937 !important;
+}
+
+.dark-theme .theme-glass * {
+  color: #ffffff !important;
+}
+
+/* Override for specific elements that should maintain their color */
+.theme-glass .text-blue-600,
+.theme-glass .text-emerald-600,
+.theme-glass .text-purple-600,
+.theme-glass .text-orange-600,
+.theme-glass .text-red-600 {
+  color: inherit !important;
+}
+
+/* Ensure button text visibility */
+button * {
+  color: inherit !important;
+}
+
+/* Enhanced notification visibility */
+.light-theme [class*="bg-white/95"] {
+  background: rgba(255, 255, 255, 0.98) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+}
+
+.dark-theme [class*="bg-gray-900/95"] {
+  background: rgba(17, 24, 39, 0.98) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+}
+
+/* Custom scrollbar with smooth animations */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: hsl(var(--muted));
+  background: var(--bg-tertiary);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--border));
-  border-radius: 3px;
+  background: var(--border-color);
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground));
+  background: var(--border-hover);
 }
 
-/* Focus styles for accessibility */
-.focus-visible:focus-visible {
-  @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+/* Loading animations with enhanced physics */
+.loading-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
 }
 
-/* Print styles for financial reports */
-@media print {
-  .no-print {
-    display: none !important;
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Chart animations with spring physics */
+.chart-enter {
+  animation: chartFadeIn 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes chartFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(59, 130, 246, 0.8), 0 0 50px rgba(59, 130, 246, 0.3);
+  }
+}
+
+/* Responsive utilities */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Mobile optimizations with touch-friendly animations */
+@media (max-width: 640px) {
+  .animate-fade-in-up,
+  .animate-slide-in-right,
+  .animate-slide-in-left {
+    animation-duration: 0.6s;
   }
   
-  .print-break {
-    page-break-before: always;
-  }
-  
-  .chart-container {
-    @apply border border-gray-300;
+  .hover-lift:hover {
+    transform: translateY(-2px) scale(1.01);
   }
 }
 
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-  :root {
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
+/* Tablet optimizations */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .hover-lift:hover {
+    transform: translateY(-3px) scale(1.015);
   }
 }
 
-/* Reduced motion support */
+/* Desktop optimizations with enhanced effects */
+@media (min-width: 1025px) {
+  .hover-lift:hover {
+    transform: translateY(-6px) scale(1.03);
+  }
+}
+
+/* High performance mode for older devices */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+  .animate-fade-in-up,
+  .animate-slide-in-right,
+  .animate-slide-in-left,
+  .animate-scale-in,
+  .animate-bounce-in,
+  .animate-genie-in,
+  .animate-genie-out,
+  .animate-morph-in,
+  .animate-liquid-float,
+  .animate-elastic-scale,
+  .animate-particle-float {
+    animation: none;
+    opacity: 1;
+    transform: none;
   }
+  
+  .hover-lift:hover,
+  .hover-scale:hover {
+    transform: none;
+  }
+}
+
+/* Enhanced micro-interactions */
+.micro-bounce {
+  transition: transform 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.micro-bounce:active {
+  transform: scale(0.95);
+}
+
+/* Staggered animations for lists */
+.stagger-children > * {
+  animation-delay: calc(var(--stagger-delay, 0) * 100ms);
+}
+
+/* Fluid typography */
+@media (min-width: 320px) and (max-width: 1200px) {
+  html {
+    font-size: calc(16px + (20 - 16) * ((100vw - 320px) / (1200 - 320)));
+  }
+}
+
+/* Performance optimizations */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
 }
