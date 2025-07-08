@@ -71,8 +71,8 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
           <div className={`
             h-full backdrop-blur-xl rounded-2xl shadow-2xl border transition-all duration-300 relative overflow-hidden
             ${theme === 'light' 
-              ? 'bg-white/95 border-white/50 shadow-gray-200/20' 
-              : 'bg-gray-900/95 border-gray-700/50 shadow-black/20'
+              ? 'bg-white/95 border-white/50 shadow-gray-200/20 frosted-glass' 
+              : 'bg-gray-900/95 border-gray-700/50 shadow-black/20 frosted-glass'
             }
             ${isCollapsed ? 'lg:px-3 lg:py-6' : 'p-6'}
           `}>

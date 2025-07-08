@@ -63,7 +63,7 @@ const RevenueChart: React.FC<RevenueChartProps> = ({ data }) => {
     <Card 
       title="Revenue Streams Analysis" 
       subtitle="Comprehensive revenue breakdown and performance trends"
-      className="relative overflow-hidden"
+      className="relative overflow-hidden liquid-glass"
     >
       {/* Background Effects */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-indigo-600/5 rounded-2xl" />

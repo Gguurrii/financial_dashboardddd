@@ -26,7 +26,7 @@ const FinancialOverview: React.FC<FinancialOverviewProps> = ({ metrics }) => {
         const isPositive = metric.changeType === 'increase';
         
         return (
-          <Card key={metric.id} className="relative overflow-hidden group hover:scale-105 transition-all duration-300">
+          <Card key={metric.id} className="relative overflow-hidden group liquid-glass">
             {/* Animated Background */}
             <div className={`absolute inset-0 bg-gradient-to-br ${metric.color} opacity-5 group-hover:opacity-10 transition-opacity duration-300`} />
             

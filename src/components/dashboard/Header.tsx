@@ -70,8 +70,8 @@ const Header: React.FC<HeaderProps> = ({ user, onLogout, onToggleChat, isChatOpe
         <div className={`
           backdrop-blur-xl rounded-2xl shadow-2xl border transition-all duration-300
           ${theme === 'light' 
-            ? 'bg-white/70 border-white/30 shadow-black/5' 
-            : 'bg-gray-900/70 border-gray-700/30 shadow-black/20'
+            ? 'bg-white/70 border-white/30 shadow-black/5 glass-card' 
+            : 'bg-gray-900/70 border-gray-700/30 shadow-black/20 glass-card'
           }
         `}>
           <div className="px-4 sm:px-6 py-4">

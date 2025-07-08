@@ -30,7 +30,7 @@ const CashFlowChart: React.FC<CashFlowChartProps> = ({ data }) => {
     <Card 
       title="Cash Flow Analysis" 
       subtitle="Real-time cash flow monitoring and trends"
-      className="relative overflow-hidden"
+      className="relative overflow-hidden frosted-glass"
     >
       {/* Background Gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-teal-600/5 rounded-2xl" />
